@@ -1,0 +1,30 @@
+// Windrose Anchors: Media, Network media.
+
+// DataViews styles, inlined from the package
+// (DataViews is bundled, not provided by WordPress).
+@use "@wordpress/dataviews/build-style/style";
+
+.windrose-anchors-library {
+	max-width: 1400px;
+
+	#windrose-anchors-library-app {
+		margin-top: 16px;
+		background: #fff;
+		border: 1px solid #dcdcde;
+	}
+
+	.windrose-anchors-library__status a {
+		margin-inline-start: 4px;
+	}
+
+	// Why only some people see an item (attached to a draft of the media hub).
+	.windrose-anchors-library__note {
+		display: block;
+		color: #50575e;
+		font-size: 12px;
+	}
+
+	.windrose-anchors-library__notice {
+		margin: 16px;
+	}
+}

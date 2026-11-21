@@ -1,0 +1,35 @@
+// Windrose Anchors in the media dialog.
+
+.windrose-anchors-notice {
+	margin: 16px;
+}
+
+.windrose-anchors-empty {
+	padding: 32px 16px;
+	text-align: center;
+	font-size: 14px;
+	color: #50575e;
+
+	&.hidden {
+		display: none;
+	}
+}
+
+.windrose-anchors-reset {
+	margin-top: 4px;
+}
+
+// Badge on media tiles (top, on the side opposite the selection check).
+.attachment .attachment-preview .windrose-anchors-badge {
+	position: absolute;
+	top: 6px;
+	inset-inline-start: 6px;
+	z-index: 1;
+	padding: 2px 6px;
+	border-radius: 2px;
+	background: rgba(29, 35, 39, 0.85);
+	color: #fff;
+	font-size: 11px;
+	line-height: 1.5;
+	pointer-events: none;
+}

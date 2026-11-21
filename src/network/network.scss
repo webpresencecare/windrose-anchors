@@ -1,0 +1,106 @@
+// Windrose Anchors network admin screens: Sites, Usage, Leave safely.
+
+// DataViews styles, inlined from the package
+// (DataViews is bundled, not provided by WordPress).
+@use "@wordpress/dataviews/build-style/style";
+
+.windrose-anchors {
+	max-width: 1200px;
+
+	.windrose-anchors__notice {
+		margin: 16px 0;
+	}
+
+	.windrose-anchors__card-title {
+		margin: 0;
+		font-size: 16px;
+		line-height: 1.5;
+	}
+
+	.windrose-anchors__table {
+		padding: 0;
+	}
+
+	// Usage.
+	.windrose-anchors__tabs {
+		margin-top: 16px;
+		background: #fff;
+	}
+
+	.windrose-anchors__list {
+		display: inline-flex;
+		flex-wrap: wrap;
+		gap: 4px 12px;
+	}
+
+	.windrose-anchors__notes {
+		margin: 0;
+		list-style: none;
+
+		li {
+			margin: 0;
+		}
+	}
+
+	.windrose-anchors__muted {
+		color: #757575;
+	}
+
+	// Leave safely.
+	.windrose-anchors__leave {
+		margin: 16px 0;
+
+		.components-base-control,
+		.components-checkbox-control {
+			margin-bottom: 16px;
+		}
+	}
+
+	// DataViews dims secondary columns; a path on the code background
+	// needs full contrast.
+	.windrose-anchors__path {
+		color: #1e1e1e;
+	}
+
+	.windrose-anchors__line {
+		display: block;
+	}
+
+	.windrose-anchors__buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	.windrose-anchors__progress {
+		margin-top: 16px;
+		max-width: 480px;
+	}
+}
+
+// Sites: media hubs.
+.windrose-anchors {
+
+	.windrose-anchors__card {
+		margin-bottom: 16px;
+	}
+
+	.windrose-anchors__hubs {
+		margin: 0 0 16px;
+		list-style: none;
+
+		li {
+			margin: 0 0 4px;
+		}
+	}
+}
+
+.windrose-anchors__choose-hub {
+
+	.windrose-anchors__buttons {
+		display: flex;
+		justify-content: flex-end;
+		gap: 8px;
+		margin-top: 16px;
+	}
+}
