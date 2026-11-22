@@ -1,5 +1,5 @@
 === Windrose Anchors - Network Media ===
-Contributors: patriciabt
+Contributors: patricia70
 Tags: multisite, media library, network media, shared media
 Requires at least: 7.2
 Tested up to: 7.2
@@ -32,6 +32,12 @@ For network administrators:
 * **Usage**: every shared item, the sites that use it, and what to look at: items changed locally, network items not found in any content (found the way WordPress's coming media library finds unused media), duplicates, usage records out of date (with a repair button). Network items not found in any content can be deleted from their site there.
 * **Leave safely**: before deactivating Windrose Anchors, or exporting one site alone, it turns network items into normal media items of their site. The file and its sizes are copied into that site's uploads folder and the site's content points to the copies. A dry run comes first; it runs for one site or for every site. The main site's files are not changed.
 
+Windrose Anchors is part of the Windrose Suite, a free set of plugins and themes for WordPress networks: https://www.webpresencecare.com/windrose/ . Each Windrose plugin and theme works on its own.
+
+Source code, issues and build steps: https://github.com/webpresencecare/windrose-anchors
+
+Security: please report vulnerabilities privately through GitHub: https://github.com/webpresencecare/windrose-anchors/security/advisories/new . Never in a public support thread.
+
 == External services ==
 
 None. Windrose Anchors only reads the media hubs of the same network, on the server. The bundled update library contacts the GitHub API (api.github.com) to check for and download updates of Windrose plugins: sent are the repository name and a "Windrose" User-Agent. GitHub terms: https://docs.github.com/en/site-policy/github-terms/github-terms-of-service, privacy: https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement
@@ -43,6 +49,12 @@ Windrose Anchors collects nothing about visitors and sets no cookies. Suggested 
 == Uninstall ==
 
 Uninstalling removes the list of allowed sites and the media hub settings. It keeps the information that links network items to their media hub: without the plugin, network items have no file of their own. Before deactivating on a network that uses network media, run Leave safely (Network admin, Windrose Anchors, Leave safely); the network Plugins screen reminds you while sites use network items.
+
+== Frequently Asked Questions ==
+
+= Is this plugin written with AI? =
+
+Yes. I write the Windrose plugins and themes with Claude Code, Anthropic's AI coding assistant: I design each feature, test it on real sites and review every release, and every commit written with Claude says so. Independent reviews are welcome on GitHub.
 
 == Changelog ==
 
