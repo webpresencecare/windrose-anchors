@@ -86,9 +86,23 @@ test.afterAll( () => {
 	}
 } );
 
+/**
+ * WordPress's bundled MediaElement throws this when a video in the dialog's details sidebar loads its metadata
+ * after the sidebar was redrawn and its player removed (setResponsiveMode() reads `parentNode.length` of a container
+ * no longer in the page). It happens on the plain "This site" tab too; picking a network video makes it likelier,
+ * since the sidebar is redrawn when the site's own item replaces the network item. Nothing visible breaks.
+ * Remove once fixed: https://core.trac.wordpress.org/ticket/62634
+ *
+ * @param {Error} error Page error.
+ * @return {boolean} True for that MediaElement error.
+ */
+const isMediaElementResize = ( error ) =>
+	error.message === "Cannot read properties of null (reading 'length')" &&
+	/\/mediaelement\/mediaelement-and-player(\.min)?\.js/.test( error.stack || '' );
+
 function watchErrors( page ) {
 	const errors = [];
-	page.on( 'pageerror', ( error ) => errors.push( error.message ) );
+	page.on( 'pageerror', ( error ) => isMediaElementResize( error ) || errors.push( error.message ) );
 	page.on( 'console', ( message ) => message.type() === 'error' && errors.push( message.text() ) );
 	page.on( 'response', ( response ) => response.status() >= 400 && errors.push( `${ response.status() } ${ response.url() }` ) );
 	return errors;
