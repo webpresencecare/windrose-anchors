@@ -25,6 +25,8 @@ declare( strict_types=1 );
 
 namespace Windrose\Anchors;
 
+use Windrose\Common\Files;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -273,7 +275,7 @@ final class Leave {
 		foreach ( $present as $file ) {
 			$to      = $target['dir'] . '/' . $names[ $file['name'] ];
 			$existed = file_exists( $to );
-			$ok      = ! $existed && copy( $file['from'], $to );
+			$ok      = ! $existed && Files::copy( $file['from'], $to );
 			if ( $ok ) {
 				clearstatcache( true, $to );
 				$ok = filesize( $to ) === $file['bytes'];

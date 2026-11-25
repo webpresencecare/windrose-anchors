@@ -1,11 +1,12 @@
 {
   "name": "windrose-anchors",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": true,
   "description": "Windrose Anchors: network admin screens, media dialog and block inserter.",
   "license": "GPL-2.0-or-later",
   "scripts": {
     "build": "wp-scripts build network=./src/network/index.js media=./src/media/index.js library=./src/library/index.js inserter=./src/inserter/index.js --output-path=build",
+    "postbuild": "node bin/guard-build.mjs",
     "start": "wp-scripts start network=./src/network/index.js media=./src/media/index.js library=./src/library/index.js inserter=./src/inserter/index.js --output-path=build",
     "lint:js": "wp-scripts lint-js src"
   },

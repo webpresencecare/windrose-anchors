@@ -3,7 +3,7 @@
  * Plugin Name:       Windrose Anchors - Network Media
  * Plugin URI:        https://www.webpresencecare.com/plugins
  * Description:       Network media: the main site's media library as a hub (other sites can be hubs too, for example the main site of each language group). Shared items appear in a Network tab and Network inserter sources on every allowed site, as local items with their own title, alt text, caption and description, while the file stays on the main site. Leave safely turns them into normal media items before deactivation.
- * Version:           0.6.1
+ * Version:           0.6.2
  * Requires at least: 7.2
  * Requires PHP:      8.4
  * Author:            Patricia BT
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'WINDROSE_ANCHORS_VERSION', '0.6.1' );
+define( 'WINDROSE_ANCHORS_VERSION', '0.6.2' );
 define( 'WINDROSE_ANCHORS_FILE', __FILE__ );
 define( 'WINDROSE_ANCHORS_DIR', __DIR__ );
 
