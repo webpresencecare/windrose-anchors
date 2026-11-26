@@ -90,7 +90,9 @@ final class Leave {
 		foreach ( $post_ids as $ids ) {
 			$posts += count( array_unique( $ids ) );
 		}
-		$free = function_exists( 'disk_free_space' ) ? disk_free_space( Hub::basedir( Settings::main_id() ) ) : false;
+		// Free space where the copies go, only when something is ready to convert (shown to network administrators).
+		$dir  = Hub::basedir( Settings::main_id() );
+		$free = array() !== $ready && function_exists( 'disk_free_space' ) && is_dir( $dir ) ? disk_free_space( $dir ) : false;
 		return array(
 			'items'   => $items,
 			'summary' => array(
@@ -299,9 +301,18 @@ final class Leave {
 			$copied[] = $to;
 		}//end foreach
 
-		// 2. The item's own file meta first (still a network item meanwhile), then it stops being one.
+		// 2. Content points to the copies, in one statement; if it fails, nothing changed: the copies go.
 		$pairs = self::url_pairs( $item, $present, $names, $target );
-		$meta  = self::local_meta( $item, $files, $names, $target );
+		$posts = self::rewrite( $pairs );
+		if ( null === $posts ) {
+			foreach ( $copied as $done ) {
+				wp_delete_file( $done );
+			}
+			return $fail( __( 'The content could not be updated. Nothing was changed for this item.', 'windrose-anchors' ) );
+		}
+
+		// 3. The item's own file meta first (still a network item meanwhile), then it stops being one.
+		$meta = self::local_meta( $item, $files, $names, $target );
 		Proxy::while_converting(
 			$id,
 			static function () use ( $id, $target, $names, $files, $meta ): void {
@@ -318,9 +329,6 @@ final class Leave {
 			delete_post_meta( $id, Proxy::MSLS_META );
 		}
 		clean_post_cache( $id );
-
-		// 3. Content points to the copies.
-		$posts = self::rewrite( $pairs );
 
 		// 4. Usage on the hub.
 		if ( 0 === Proxy::find( $hub_id, $hub_site ) ) {
@@ -569,9 +577,10 @@ final class Leave {
 		// One pass over the table for all URLs of the item (each file has two: plain and JSON-escaped).
 		$likes = array_map( static fn( string $from ): string => '%' . $wpdb->esc_like( $from ) . '%', array_keys( $pairs ) );
 		$sql   = "SELECT ID, post_type FROM {$wpdb->posts} WHERE ( " . implode( ' OR ', array_fill( 0, count( $likes ), 'post_content LIKE %s' ) ) . ' )';
-		$found = array();
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- Migration; $sql only holds fixed SQL and placeholders.
-		foreach ( (array) $wpdb->get_results( $wpdb->prepare( $sql, $likes ), ARRAY_A ) as $row ) {
+		$rows  = (array) $wpdb->get_results( $wpdb->prepare( $sql, $likes ), ARRAY_A );
+		$found = array();
+		foreach ( $rows as $row ) {
 			$found[ (int) $row['ID'] ] = (string) $row['post_type'];
 		}
 		ksort( $found );
@@ -582,9 +591,10 @@ final class Leave {
 	 * Replaces the hub URLs by the copies' URLs in the current site's content.
 	 *
 	 * @param array<string, string> $pairs From => to.
-	 * @return int Number of posts changed (revisions not counted).
+	 * @return int|null Number of posts changed (revisions not counted), or null when the database refused the change
+	 *                  (then nothing changed).
 	 */
-	private static function rewrite( array $pairs ): int {
+	private static function rewrite( array $pairs ): ?int {
 		global $wpdb;
 		$found = self::matching( $pairs );
 		if ( array() === $found ) {
@@ -593,9 +603,16 @@ final class Leave {
 		$all     = array_keys( $found );
 		$counted = array_filter( $found, static fn( string $type ): bool => 'revision' !== $type );
 		$in      = implode( ',', $all );
+		// One statement for all pairs, applied in order (nested REPLACE): all or nothing.
+		$expr = 'post_content';
+		$args = array();
 		foreach ( $pairs as $from => $to ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Migration of URLs, only the posts found above ($in: integers); caches cleaned below.
-			$wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->posts} SET post_content = REPLACE( post_content, %s, %s ) WHERE ID IN ($in)", $from, $to ) );
+			$expr = "REPLACE( {$expr}, %s, %s )";
+			array_push( $args, $from, $to );
+		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Migration of URLs, only the posts found above ($in: integers, $expr: fixed SQL and placeholders); caches cleaned below.
+		if ( false === $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->posts} SET post_content = {$expr} WHERE ID IN ($in)", $args ) ) ) {
+			return null;
 		}
 		foreach ( $all as $post_id ) {
 			clean_post_cache( $post_id );

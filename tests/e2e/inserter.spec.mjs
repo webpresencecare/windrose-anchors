@@ -102,7 +102,8 @@ async function openMediaTab( page, path ) {
 	return post;
 }
 
-const SOURCE_MENU = /^(Media source|Source des médias)$/;
+// French changed its wording on translate.wordpress.org on 2026-11-25; both are accepted.
+const SOURCE_MENU = /^(Media source|Source des médias|Source du média)$/;
 
 /** Opens a new post, the inserter's Media tab, and the Media source menu. */
 async function openMediaSources( page, path ) {

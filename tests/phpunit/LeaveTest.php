@@ -127,6 +127,34 @@ class LeaveTest extends Anchors_TestCase {
 		$this->assertSame( array( self::$ar ), array_values( array_unique( array_column( $one['items'], 'site' ) ) ) );
 	}
 
+	public function test_when_the_database_refuses_the_content_change_nothing_changes(): void {
+		global $wpdb;
+		$hub   = $this->hub_image();
+		$proxy = $this->proxy_on( self::$fr, $hub );
+		$post  = $this->post_using( self::$fr, $proxy );
+		switch_to_blog( self::$fr );
+		$before = get_post_field( 'post_content', $post, 'raw' );
+		$files  = (array) glob( wp_get_upload_dir()['basedir'] . '/' . gmdate( 'Y/m' ) . '/canola*' );
+		restore_current_blog();
+		// The UPDATE of the content fails, as when MySQL gives up waiting for a lock.
+		$break  = static fn( string $query ): string => str_contains( $query, 'SET post_content = REPLACE(' ) ? 'UPDATE windrose_anchors_missing_table SET x = 1' : $query;
+		add_filter( 'query', $break );
+		$errors = $wpdb->suppress_errors( true );
+		$result = Leave::convert( self::$fr, array( $proxy ) )[0];
+		$wpdb->suppress_errors( $errors );
+		remove_filter( 'query', $break );
+
+		$this->assertFalse( $result['ok'] );
+		$this->assertStringContainsString( 'content could not be updated', $result['message'] );
+		switch_to_blog( self::$fr );
+		clean_post_cache( $proxy );
+		clean_post_cache( $post );
+		$this->assertSame( $hub, Proxy::hub_of( $proxy ), 'Still a network item.' );
+		$this->assertSame( $before, get_post_field( 'post_content', $post, 'raw' ) );
+		$this->assertSame( $files, (array) glob( wp_get_upload_dir()['basedir'] . '/' . gmdate( 'Y/m' ) . '/canola*' ), 'The copies are gone.' );
+		restore_current_blog();
+	}
+
 	public function test_conversion_makes_a_normal_attachment_and_points_content_to_the_copies(): void {
 		$hub    = $this->hub_image();
 		$hashes = $this->hub_hashes( $hub );

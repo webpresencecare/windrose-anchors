@@ -154,15 +154,14 @@ final class Proxy {
 		$hub = $site > 0 ? $site : Settings::hub_id();
 		$ids = get_posts(
 			array(
-				'post_type'        => 'attachment',
-				'post_status'      => array( 'inherit', 'private' ),
-				'fields'           => 'ids',
-				'numberposts'      => -1,
-				'orderby'          => 'ID',
-				'order'            => 'ASC',
-				'meta_key'         => self::HUB_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Only when an item is picked.
-				'meta_value'       => (string) $hub_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Same.
-				'suppress_filters' => true,
+				'post_type'   => 'attachment',
+				'post_status' => array( 'inherit', 'private' ),
+				'fields'      => 'ids',
+				'numberposts' => -1,
+				'orderby'     => 'ID',
+				'order'       => 'ASC',
+				'meta_key'    => self::HUB_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Only when an item is picked.
+				'meta_value'  => (string) $hub_id, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Same.
 			)
 		);
 		// The same attachment ID can exist on two hubs: keep the item made from this site's hub.
@@ -186,14 +185,13 @@ final class Proxy {
 		$hub = Settings::hub_id();
 		$ids = get_posts(
 			array(
-				'post_type'        => 'attachment',
-				'post_status'      => array( 'inherit', 'private' ),
-				'fields'           => 'ids',
-				'numberposts'      => -1,
-				'orderby'          => 'ID',
-				'order'            => 'DESC',
-				'meta_key'         => self::HUB_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- This site's network items.
-				'suppress_filters' => true,
+				'post_type'   => 'attachment',
+				'post_status' => array( 'inherit', 'private' ),
+				'fields'      => 'ids',
+				'numberposts' => -1,
+				'orderby'     => 'ID',
+				'order'       => 'DESC',
+				'meta_key'    => self::HUB_META, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- This site's network items.
 			)
 		);
 		update_meta_cache( 'post', array_map( 'intval', $ids ) );

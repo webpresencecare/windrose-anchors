@@ -389,12 +389,11 @@ final class Hub {
 			static function (): array {
 				$ids = get_posts(
 					array(
-						'post_type'        => 'attachment',
-						'post_status'      => 'any',
-						'fields'           => 'ids',
-						'numberposts'      => -1,
-						'meta_key'         => self::USAGE, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Only when a hub stops being one or a site is deleted.
-						'suppress_filters' => true,
+						'post_type'   => 'attachment',
+						'post_status' => 'any',
+						'fields'      => 'ids',
+						'numberposts' => -1,
+						'meta_key'    => self::USAGE, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Only when a hub stops being one or a site is deleted.
 					)
 				);
 				$ids = array_map( 'intval', $ids );
@@ -517,12 +516,11 @@ final class Hub {
 				static function () use ( $blog_id, $site ): void {
 					$ids = get_posts(
 						array(
-							'post_type'        => 'attachment',
-							'post_status'      => 'any',
-							'fields'           => 'ids',
-							'numberposts'      => -1,
-							'meta_key'         => self::USAGE, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Rare: only when a site is deleted.
-							'suppress_filters' => true,
+							'post_type'   => 'attachment',
+							'post_status' => 'any',
+							'fields'      => 'ids',
+							'numberposts' => -1,
+							'meta_key'    => self::USAGE, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Rare: only when a site is deleted.
 						)
 					);
 					foreach ( $ids as $id ) {

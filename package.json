@@ -1,6 +1,6 @@
 {
   "name": "windrose-anchors",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "private": true,
   "description": "Windrose Anchors: network admin screens, media dialog and block inserter.",
   "license": "GPL-2.0-or-later",

@@ -4,11 +4,11 @@ Tags: multisite, media library, network media, shared media
 Requires at least: 7.2
 Tested up to: 7.2
 Requires PHP: 8.4
-Stable tag: 0.6.2
+Stable tag: 0.6.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Network media for multisite: the main site's media library (or that of other media hubs) shared with a Network tab and Network sources in the block inserter on every allowed site.
+Network media for multisite: share a media hub's library with every allowed site, through a Network tab and Network sources in the block inserter.
 
 == Description ==
 
@@ -57,6 +57,10 @@ Uninstalling removes the list of allowed sites and the media hub settings. It ke
 Yes. I write the Windrose plugins and themes with Claude Code, Anthropic's AI coding assistant: I design each feature, test it on real sites and review every release, and every commit written with Claude says so. Independent reviews are welcome on GitHub.
 
 == Changelog ==
+
+= 0.6.3 =
+* Leave the hub: the addresses in the content are rewritten in one database statement per item, before the item changes; if the database refuses it, nothing changes for that item and it says so (before, the item was converted while its content still pointed to the hub). The free disk space is read only when items are ready to convert.
+* Code: redundant query arguments removed (WordPress's defaults); shorter readme description.
 
 = 0.6.2 =
 * Windrose Common 1.4.0: Files, for reading, writing and copying uploads and temporary files through WordPress's Filesystem API.
